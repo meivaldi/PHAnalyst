@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">PH Analyst</string>
+    <string name="slide_1_desc">Tanam sensor pada tanah yang akan dicek pH nya</string>
+    <string name="slide_2_desc">Arduino akan mengkalkulasi nilai pH dan mengirimnya dengan bluetooth</string>
+    <string name="slide_3_desc">Nilai pH tanah akan ditampilkan pada smartphone beserta informasi lainnya</string>
+    <string name="skip">Lewati</string>
+    <string name="next">Selanjutnya</string>
+    <string name="start">OKE</string>
+    <string name="suggestion">Dengan pH Segini, Kamu Bisa Menanam Tanaman:</string>
+    <string name="cabbage">Kubis</string>
+    <string name="carrot">Wortel</string>
+    <string name="garlic">Bawang Putih</string>
+    <string name="onion">Bawang Merah</string>
+    <string name="watermelon">Semangka</string>
+    <string name="banana">Pisang</string>
+    <string name="broccoli">Brokoli</string>
+    <string name="melon">Melon</string>
+    <string name="mint">Daun Mint</string>
+    <string name="pakcoy">Pakcoy</string>
+    <string name="papaya">Pepaya</string>
+    <string name="pineapple">Nanas</string>
+    <string name="potato">Kentang</string>
+    <string name="radish">Lobak</string>
+    <string name="spinach">Bayam</string>
+    <string name="strawberry">Stroberi</string>
+    <string name="plant_default">Tanaman Tidak Tersedia</string>
+    <string name="GOOGLE_MAPS_API_KEY">AIzaSyBRWaAoGNlE31l_ExsSVfvVIubozwjsQx4</string>
+</resources>

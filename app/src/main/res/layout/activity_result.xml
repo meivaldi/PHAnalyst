@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_result"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/bg_screen3"
+    tools:context="com.meivaldi.phanalyst.ResultActivity">
+
+    <TextView
+        android:id="@+id/pHLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textColor="#fff"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:text="pH Tanah:"/>
+
+    <TextView
+        android:id="@+id/pHValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        android:layout_below="@id/pHLabel"
+        android:textColor="#fff"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        android:text="6.0"/>
+
+    <LinearLayout
+        android:id="@+id/buttonGroup"
+        android:layout_below="@id/pHValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/seeMap"
+            android:layout_marginRight="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/dot_light_screen3"
+            android:text="Lihat MAP"
+            android:textColor="#fff"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/simpanNilai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/dot_light_screen3"
+            android:text="Simpan Nilai"
+            android:textColor="#fff"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/suggestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonGroup"
+        android:text="@string/suggestion"
+        android:textColor="#fff"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/suggestionPlant"
+        android:layout_below="@id/suggestion"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
