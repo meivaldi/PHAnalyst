@@ -8,6 +8,8 @@
     <color name="dot_dark_screen3">#2278d4</color>
     <color name="dot_light_screen3">#93c6fd</color>
     <color name="textColor">#fff</color>
+    <color name="red">#ff0000</color>
+    <color name="green">#00ff00</color>
 
     <array name="array_dot_active">
         <item>@color/dot_light_screen3</item>
