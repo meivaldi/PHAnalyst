@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -38,9 +39,10 @@ public class MainActivity extends AppCompatActivity {
     OutputStream outputStream;
 
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private BluetoothAdapter mBtAdapter;
-    private ArrayAdapter<String> mPairedDevicesArrayAdapter;
+    private BluetoothDevice myDevice;
 
 
     @Override
@@ -61,7 +63,11 @@ public class MainActivity extends AppCompatActivity {
         calculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ResultActivity.class));
+                String address = myDevice.getAddress();
+
+                Intent i = new Intent(MainActivity.this, ResultActivity.class);
+                i.putExtra(EXTRA_DEVICE_ADDRESS, address);
+                startActivity(i);
             }
         });
 
@@ -81,5 +87,35 @@ public class MainActivity extends AppCompatActivity {
         checkBTState();
 
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+
+        if (pairedDevices.size()>0)
+        {
+            for(BluetoothDevice bt : pairedDevices)
+            {
+                if(bt.getName().equals("HC-05")){
+                    bluetoothDevice = bt;
+                    break;
+                }
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "Tidak ada perangkat yang ditemukan", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void checkBTState() {
+        mBtAdapter=BluetoothAdapter.getDefaultAdapter();
+        if(mBtAdapter==null) {
+            Toast.makeText(getBaseContext(), "Device does not support Bluetooth", Toast.LENGTH_SHORT).show();
+        } else {
+            if (mBtAdapter.isEnabled()) {
+                Log.d(TAG, "...Bluetooth ON...");
+            } else {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, 1);
+
+            }
+        }
     }
 }
