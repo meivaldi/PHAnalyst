@@ -64,10 +64,6 @@ public class ResultActivity extends AppCompatActivity {
             }
         });
 
-        myViewPagerAdapter = new MyViewPagerAdapter();
-        suggestionPlant.setAdapter(myViewPagerAdapter);
-        suggestionPlant.addOnPageChangeListener(viewPagerPageChangeListener);
-
         bluetoothIn = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 if (msg.what == handlerState) {
@@ -125,6 +121,10 @@ public class ResultActivity extends AppCompatActivity {
         } else {
             layouts = new int[]{ R.layout.plant_default };
         }
+
+        myViewPagerAdapter = new MyViewPagerAdapter();
+        suggestionPlant.setAdapter(myViewPagerAdapter);
+        suggestionPlant.addOnPageChangeListener(viewPagerPageChangeListener);
 
     }
 
