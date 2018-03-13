@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_LONG).show();
                 String address = bluetoothDevice.getAddress();
                 Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
-                intent.putExtra("ADDRESS", address);
+                intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
                 startActivity(intent);
             }
         });

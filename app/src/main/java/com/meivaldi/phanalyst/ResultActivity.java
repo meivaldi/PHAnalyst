@@ -39,7 +39,7 @@ public class ResultActivity extends AppCompatActivity {
 
     Handler bluetoothIn;
 
-    final int handlerState = 0;                         //used to identify handler message
+    final int handlerState = 0;
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
     private StringBuilder recDataString = new StringBuilder();
@@ -111,19 +111,17 @@ public class ResultActivity extends AppCompatActivity {
                 if (msg.what == handlerState) {
                     String readMessage = (String) msg.obj;
                     recDataString.append(readMessage);
-                    int endOfLineIndex = recDataString.indexOf("~");
-                    if (endOfLineIndex > 0) {
+
                         if (recDataString.charAt(0) == '#')
                         {
-                            String sensor0 = recDataString.substring(1, 5);
+                            String sensor = recDataString.substring(1, 5);
 
-                            pHLabel.setText("Nilai pH = " + sensor0);
+                            pHLabel.setText(sensor);
                         }
                         recDataString.delete(0, recDataString.length());
                     }
                 }
-            }
-        };
+            };
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         checkBTState();
