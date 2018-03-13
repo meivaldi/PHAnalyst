@@ -56,6 +56,20 @@ public class MainActivity extends AppCompatActivity {
         labelStatus = (TextView) findViewById(R.id.labelStatus);
         statusBar = (LinearLayout) findViewById(R.id.statusBar);
 
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if(mBtAdapter == null)
+        {
+            Toast.makeText(getApplicationContext(), "Bluetooth Tidak Tersedia", Toast.LENGTH_LONG).show();
+
+            finish();
+        }
+        else if(!mBtAdapter.isEnabled())
+        {
+            Intent turnBTon = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(turnBTon,1);
+        }
+
         calculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
