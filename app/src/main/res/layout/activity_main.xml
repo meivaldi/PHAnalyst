@@ -38,16 +38,6 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/dataStore"
-        android:layout_below="@id/statusBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Data"
-        android:textSize="30dp"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"/>
-
     <Button
         android:id="@+id/btStatus"
         android:background="@color/dot_light_screen3"

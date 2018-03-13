@@ -29,14 +29,11 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     Button calculate, btConnect;
-    TextView labelStatus, dataStore;
+    TextView labelStatus;
     ImageView imageStatus;
     LinearLayout statusBar;
     BluetoothSocket bluetoothSocket = null;
     BluetoothDevice bluetoothDevice = null;
-    ProgressDialog progress;
-    InputStream inputStream;
-    OutputStream outputStream;
 
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -57,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         calculate = (Button) findViewById(R.id.startProcess);
         imageStatus = (ImageView) findViewById(R.id.bluetoothStatus);
         labelStatus = (TextView) findViewById(R.id.labelStatus);
-        dataStore = (TextView) findViewById(R.id.dataStore);
         statusBar = (LinearLayout) findViewById(R.id.statusBar);
 
         calculate.setOnClickListener(new View.OnClickListener() {
