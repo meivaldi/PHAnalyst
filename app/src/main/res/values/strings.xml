@@ -26,4 +26,6 @@
     <string name="plant_default">Tanaman Tidak Tersedia</string>
     <string name="GOOGLE_MAPS_API_KEY">AIzaSyBRWaAoGNlE31l_ExsSVfvVIubozwjsQx4</string>
     <string name="status">Status</string>
+    <string name="bluetooth_tidak_terhubung">Bluetooth tidak terhubung</string>
+    <string name="hubungkan_sekarang">Hubungkan Sekarang</string>
 </resources>
