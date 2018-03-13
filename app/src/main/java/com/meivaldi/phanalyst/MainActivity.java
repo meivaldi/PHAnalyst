@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothAdapter mBtAdapter;
     private BluetoothDevice myDevice;
 
+    private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,49 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void disconnectBluetooth() {
+        try {
+            bluetoothSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        btConnect.setText("Connect");
+        labelStatus.setText("Disconnected");
+        imageStatus.setImageResource(R.drawable.ic_bluetooth_disabled_white_24dp);
+        statusBar.setBackgroundColor(R.color.red);
+    }
+
+    private void connectBlueTooth() {
+        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+
+        if (pairedDevices.size()>0)
+        {
+            for(BluetoothDevice bt : pairedDevices)
+            {
+                if(bt.getName().equals("HC-05")){
+                    bluetoothDevice = bt;
+                    break;
+                }
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "Tidak ada perangkat yang ditemukan", Toast.LENGTH_LONG).show();
+        }
+
+        try {
+            bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(myUUID);
+            bluetoothSocket.connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        btConnect.setText("Disconnect");
+        labelStatus.setText("Connected");
+        imageStatus.setImageResource(R.drawable.ic_bluetooth_white_24dp);
+        statusBar.setBackgroundColor(R.color.green);
 
     }
 
