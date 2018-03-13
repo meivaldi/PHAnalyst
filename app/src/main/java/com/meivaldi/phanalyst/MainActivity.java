@@ -85,7 +85,11 @@ public class MainActivity extends AppCompatActivity {
         btConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if(btConnect.getText().toString().equals("Connect")){
+                    connectBlueTooth();
+                } else if(btConnect.getText().toString().equals("Disconnect")){
+                    disconnectBluetooth();
+                }
             }
         });
 
