@@ -64,6 +64,30 @@ public class ResultActivity extends AppCompatActivity {
             }
         });
 
+        myViewPagerAdapter = new MyViewPagerAdapter();
+        suggestionPlant.setAdapter(myViewPagerAdapter);
+        suggestionPlant.addOnPageChangeListener(viewPagerPageChangeListener);
+
+        bluetoothIn = new Handler() {
+            public void handleMessage(android.os.Message msg) {
+                if (msg.what == handlerState) {
+                    String readMessage = (String) msg.obj;
+                    recDataString.append(readMessage);
+
+                        if (recDataString.charAt(0) == '#')
+                        {
+                            String sensor = recDataString.substring(1, 5);
+
+                            pHLabel.setText(sensor);
+                        }
+                        recDataString.delete(0, recDataString.length());
+                    }
+                }
+            };
+
+        btAdapter = BluetoothAdapter.getDefaultAdapter();
+        checkBTState();
+
         String pHValue = pHLabel.getText().toString();
         float pH = Float.parseFloat(pHValue);
 
@@ -101,30 +125,6 @@ public class ResultActivity extends AppCompatActivity {
         } else {
             layouts = new int[]{ R.layout.plant_default };
         }
-
-        myViewPagerAdapter = new MyViewPagerAdapter();
-        suggestionPlant.setAdapter(myViewPagerAdapter);
-        suggestionPlant.addOnPageChangeListener(viewPagerPageChangeListener);
-
-        bluetoothIn = new Handler() {
-            public void handleMessage(android.os.Message msg) {
-                if (msg.what == handlerState) {
-                    String readMessage = (String) msg.obj;
-                    recDataString.append(readMessage);
-
-                        if (recDataString.charAt(0) == '#')
-                        {
-                            String sensor = recDataString.substring(1, 5);
-
-                            pHLabel.setText(sensor);
-                        }
-                        recDataString.delete(0, recDataString.length());
-                    }
-                }
-            };
-
-        btAdapter = BluetoothAdapter.getDefaultAdapter();
-        checkBTState();
 
     }
 
