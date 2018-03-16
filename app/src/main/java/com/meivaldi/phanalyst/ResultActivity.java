@@ -72,7 +72,7 @@ public class ResultActivity extends AppCompatActivity {
 
                         if (recDataString.charAt(0) == '#')
                         {
-                            String sensor = recDataString.substring(1, 5);
+                            String sensor = recDataString.substring(1, 1);
 
                             pHLabel.setText(sensor);
                         }
