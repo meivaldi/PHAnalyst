@@ -72,9 +72,9 @@ public class ResultActivity extends AppCompatActivity {
 
                         if (recDataString.charAt(0) == '#')
                         {
-                            String sensor = recDataString.substring(1, 1);
+                            /*String sensor = recDataString.substring(1, 3);
 
-                            pHLabel.setText(sensor);
+                            pHLabel.setText(sensor);*/
                         }
                         recDataString.delete(0, recDataString.length());
                     }
@@ -83,6 +83,8 @@ public class ResultActivity extends AppCompatActivity {
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         checkBTState();
+
+        Toast.makeText(getApplicationContext(), ""+recDataString.length(), Toast.LENGTH_LONG).show();
 
         String pHValue = pHLabel.getText().toString();
         float pH = Float.parseFloat(pHValue);
