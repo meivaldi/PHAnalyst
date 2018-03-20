@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "146805066021",
+    "firebase_url": "https://phanalyst-197018.firebaseio.com",
+    "project_id": "phanalyst-197018",
+    "storage_bucket": "phanalyst-197018.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:146805066021:android:0b47788fc1342178",
+        "android_client_info": {
+          "package_name": "com.meivaldi.phanalyst"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "146805066021-73bj8gs1up0b4nmqgvrcmcm3184k0pqg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.meivaldi.phanalyst",
+            "certificate_hash": "fec02f8d4fcfe3e3839a001bc448792ce82b784b"
+          }
+        },
+        {
+          "client_id": "146805066021-adarb4c6thfa1cfgmopg8vju5nuc9tf8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlTtvMDSxvQhrR7QzNU80hi3RlAyXyUaE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146805066021-adarb4c6thfa1cfgmopg8vju5nuc9tf8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
