@@ -70,21 +70,21 @@ public class ResultActivity extends AppCompatActivity {
                     String readMessage = (String) msg.obj;
                     recDataString.append(readMessage);
 
-                        if (recDataString.charAt(0) == '#')
-                        {
-                            /*String sensor = recDataString.substring(1, 3);
+                    int endOfLineIndex = recDataString.indexOf("~");
+                    if (endOfLineIndex > 0) {
+                        if (recDataString.charAt(0) == '#') {
+                            String sensor = recDataString.substring(1, 5);
 
-                            pHLabel.setText(sensor);*/
+                            pHLabel.setText(sensor);
                         }
                         recDataString.delete(0, recDataString.length());
+                        }
                     }
                 }
             };
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         checkBTState();
-
-        Toast.makeText(getApplicationContext(), ""+recDataString.length(), Toast.LENGTH_LONG).show();
 
         String pHValue = pHLabel.getText().toString();
         float pH = Float.parseFloat(pHValue);
@@ -210,7 +210,6 @@ public class ResultActivity extends AppCompatActivity {
         mConnectedThread = new ConnectedThread(btSocket);
         mConnectedThread.start();
 
-        mConnectedThread.write("x");
     }
 
     private void checkBTState() {
@@ -258,17 +257,6 @@ public class ResultActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     break;
                 }
-            }
-        }
-
-        public void write(String input) {
-            byte[] msgBuffer = input.getBytes();
-            try {
-                mmOutStream.write(msgBuffer);
-            } catch (IOException e) {
-                Toast.makeText(getBaseContext(), "Connection Failure", Toast.LENGTH_LONG).show();
-                finish();
-
             }
         }
 
