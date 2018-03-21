@@ -79,8 +79,10 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/suggestionPlant"
-        android:layout_below="@id/suggestion"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/pHValue"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="17dp" />
 
 </RelativeLayout>
