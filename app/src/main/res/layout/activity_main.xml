@@ -40,7 +40,7 @@
         android:layout_centerHorizontal="true"
         android:background="@color/dot_light_screen3"
         android:text="@string/hubungkan_sekarang"
-        android:textColor="#fff"
+        android:textColor="#000"
         android:textStyle="bold"/>
 
 </RelativeLayout>
