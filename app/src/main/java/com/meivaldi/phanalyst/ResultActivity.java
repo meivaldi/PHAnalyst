@@ -111,23 +111,7 @@ public class ResultActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getLatLng();
-                Map<String, Object> dataToSave = new HashMap<String, Object>();
-                dataToSave.put(LATITUDE_KEY, getLatitude());
-                dataToSave.put(LONGITUDE_KEY, getLongitude());
-                dataToSave.put(VALUE_KEY, pHLabel.getText().toString());
 
-                mFireStore.collection("PHAnalyst").document("Location 2").set(dataToSave)
-                        .addOnCompleteListener(ResultActivity.this, new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    Toast.makeText(getApplicationContext(), "Berhasil Menyimpan data", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Gagal Menyimpan data", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                Toast.makeText(getApplicationContext(), getLatitude() + " " + getLongitude(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -226,8 +210,23 @@ public class ResultActivity extends AppCompatActivity {
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
 
-                            setLatitude(currentLocation.getLatitude());
-                            setLongitude(currentLocation.getLongitude());
+                            Map<String, Object> dataToSave = new HashMap<String, Object>();
+                            dataToSave.put(LATITUDE_KEY, currentLocation.getLatitude());
+                            dataToSave.put(LONGITUDE_KEY, currentLocation.getLongitude());
+                            dataToSave.put(VALUE_KEY, pHLabel.getText().toString());
+
+                            mFireStore.collection("PHAnalyst").document("My Location").set(dataToSave)
+                                    .addOnCompleteListener(ResultActivity.this, new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                Toast.makeText(getApplicationContext(), "Berhasil Menyimpan data", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "Gagal Menyimpan data", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                            Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + " " + currentLocation.getLongitude(), Toast.LENGTH_LONG).show();
                             
                         } else {
                             Log.d(TAG, "onComplete: current location is null!");
