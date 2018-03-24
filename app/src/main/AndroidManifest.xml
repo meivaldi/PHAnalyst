@@ -3,6 +3,10 @@
     package="com.meivaldi.phanalyst">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -41,7 +45,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ResultActivity" />
-        <activity android:name=".Map"></activity>
+        <activity android:name=".Maps"></activity>
     </application>
 
 </manifest>

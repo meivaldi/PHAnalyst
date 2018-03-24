@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationListener;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -38,16 +39,23 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class ResultActivity extends AppCompatActivity {
 
+    private static final String LATITUDE_KEY = "latitude";
+    private static final String LONGITUDE_KEY = "longitude";
+    private static final String VALUE_KEY = "value";
     private int[] layouts;
     private MyViewPagerAdapter myViewPagerAdapter;
     private Button map, saveValue;
@@ -76,6 +84,9 @@ public class ResultActivity extends AppCompatActivity {
     private static final String TAG = "ResultActivity";
     private double latitude;
     private double longitude;
+    private double value;
+
+    private FirebaseFirestore mFireStore = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +103,7 @@ public class ResultActivity extends AppCompatActivity {
         map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), Map.class));
+                startActivity(new Intent(getApplicationContext(), Maps.class));
             }
         });
 
@@ -100,7 +111,23 @@ public class ResultActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getLatLng();
+                Map<String, Object> dataToSave = new HashMap<String, Object>();
+                dataToSave.put(LATITUDE_KEY, getLatitude());
+                dataToSave.put(LONGITUDE_KEY, getLongitude());
+                dataToSave.put(VALUE_KEY, pHLabel.getText().toString());
 
+                mFireStore.collection("PHAnalyst").document("Location 2").set(dataToSave)
+                        .addOnCompleteListener(ResultActivity.this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Toast.makeText(getApplicationContext(), "Berhasil Menyimpan data", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Gagal Menyimpan data", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                Toast.makeText(getApplicationContext(), getLatitude() + " " + getLongitude(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -199,9 +226,9 @@ public class ResultActivity extends AppCompatActivity {
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
 
-                            Toast.makeText(getApplicationContext(), currentLocation.getLatitude()
-                                + " " + currentLocation.getLongitude() + " " + pHLabel.getText().toString()
-                            , Toast.LENGTH_LONG).show();
+                            setLatitude(currentLocation.getLatitude());
+                            setLongitude(currentLocation.getLongitude());
+                            
                         } else {
                             Log.d(TAG, "onComplete: current location is null!");
                             Toast.makeText(ResultActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();

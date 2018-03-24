@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-public class Map extends AppCompatActivity implements OnMapReadyCallback{
+public class Maps extends AppCompatActivity implements OnMapReadyCallback{
 
     private static final String TAG = "MapActivity";
 
@@ -63,7 +63,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15f);
                         } else {
                             Log.d(TAG, "onComplete: current location is null!");
-                            Toast.makeText(Map.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Maps.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -105,7 +105,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
     private void initMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
-        mapFragment.getMapAsync(Map.this);
+        mapFragment.getMapAsync(Maps.this);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(getApplicationContext(), "Map is Ready", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Maps is Ready", Toast.LENGTH_SHORT).show();
         mMap = googleMap;
 
         if (mLocationPermissionGranted) {

@@ -4,13 +4,13 @@
     android:id="@+id/activity_map"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.meivaldi.phanalyst.Map">
+    tools:context="com.meivaldi.phanalyst.Maps">
 
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Map"
+        tools:context=".Maps"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
 
 </RelativeLayout>

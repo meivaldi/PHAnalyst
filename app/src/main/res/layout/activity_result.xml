@@ -4,13 +4,8 @@
     android:id="@+id/activity_result"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@color/bg_screen3"
     tools:context="com.meivaldi.phanalyst.ResultActivity">
-
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/app_bar" />
 
     <TextView
         android:id="@+id/pHLabel"
@@ -80,11 +75,10 @@
         android:textStyle="bold"/>
 
     <android.support.v4.view.ViewPager
+        android:layout_below="@id/suggestion"
         android:id="@+id/suggestionPlant"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/pHValue"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="17dp" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true" />
 
 </RelativeLayout>
