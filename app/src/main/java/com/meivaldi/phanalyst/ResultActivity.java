@@ -2,6 +2,7 @@ package com.meivaldi.phanalyst;
 
 import android.*;
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -95,6 +96,7 @@ public class ResultActivity extends AppCompatActivity {
 
     private Geocoder geoCoder;
     private List<Address> addresses;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +109,7 @@ public class ResultActivity extends AppCompatActivity {
         pHLabel = (TextView) findViewById(R.id.pHValue);
         map = (Button) findViewById(R.id.seeMap);
         saveValue = (Button) findViewById(R.id.simpanNilai);
+        progressDialog = new ProgressDialog(this);
 
         map.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,11 +121,15 @@ public class ResultActivity extends AppCompatActivity {
         saveValue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog.setMessage("Tunggu Sebentar");
+                progressDialog.setIcon(R.drawable.sensor);
+                progressDialog.setTitle("Sedang Memroses...");
+                progressDialog.show();
                 getLatLng();
-
             }
         });
 
+        final String[] result = new String[1];
         bluetoothIn = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 if (msg.what == handlerState) {
@@ -133,22 +140,20 @@ public class ResultActivity extends AppCompatActivity {
                     if (endOfLineIndex > 0) {
                         if (recDataString.charAt(0) == '#') {
                             String sensor = recDataString.substring(1, 5);
-
+                            result[0] = sensor;
                             pHLabel.setText(sensor);
                         }
                         recDataString.delete(0, recDataString.length());
                         }
                     }
                 }
-            };
+        };
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         checkBTState();
 
         String pHValue = pHLabel.getText().toString();
         float pH = Float.parseFloat(pHValue);
-
-        Toast.makeText(getApplicationContext(), "" + pH, Toast.LENGTH_LONG).show();
 
         if(pH == 7.0){
             layouts = new int[]{
@@ -191,22 +196,6 @@ public class ResultActivity extends AppCompatActivity {
 
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
     private void getLatLng() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(ResultActivity.this);
 
@@ -241,8 +230,10 @@ public class ResultActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
+                                                progressDialog.hide();
                                                 Toast.makeText(getApplicationContext(), "Berhasil Menyimpan data", Toast.LENGTH_SHORT).show();
                                             } else {
+                                                progressDialog.hide();
                                                 Toast.makeText(getApplicationContext(), "Gagal Menyimpan data", Toast.LENGTH_SHORT).show();
                                             }
                                         }

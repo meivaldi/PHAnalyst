@@ -51,9 +51,14 @@ public class MainActivity extends AppCompatActivity {
                 connectBlueTooth();
                 Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_LONG).show();
                 String address = bluetoothDevice.getAddress();
-                Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
-                intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-                startActivity(intent);
+
+                if(!address.isEmpty()){
+                    Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
+                    intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Perangkat tidak ditemukan!", Toast.LENGTH_LONG).show();
+                }
             }
         });
 

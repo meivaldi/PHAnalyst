@@ -54,7 +54,7 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
     private List<Address> addresses;
 
     private FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-    private ArrayList<PlaceInfo> arrayList = new ArrayList<>();
+    private ArrayList<PlaceInfo> arrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +62,8 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
         setContentView(R.layout.activity_map);
 
         getLocationPermission();
+
+        arrayList = new ArrayList<>();
     }
 
     private void getDeviceLocation() {
@@ -171,6 +173,9 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
                 return;
             }
             mMap.setMyLocationEnabled(true);
+
+            getAllData();
+            Toast.makeText(getApplicationContext(), ""+arrayList.size(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -184,18 +189,7 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
                         } else {
                             List<PlaceInfo> places = documentSnapshots.toObjects(PlaceInfo.class);
 
-                            arrayList.addAll(places);
-
-
-                            for(int i=0; i<arrayList.size(); i++){
-                                MarkerOptions options = new MarkerOptions()
-                                        .position(places.get(i).getLatlng())
-                                        .title(places.get(i).getAddress());
-
-                                mMap.addMarker(options);
-                            }
-
-                            Toast.makeText(getApplicationContext(), ""+places.size(), Toast.LENGTH_LONG).show();
+                            Maps.this.arrayList.addAll(places);
                         }
                     }
                 }).addOnFailureListener(this, new OnFailureListener() {
