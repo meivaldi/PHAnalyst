@@ -33,6 +33,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +60,8 @@ import java.util.UUID;
 
 public class ResultActivity extends AppCompatActivity {
 
+    private MyPageAdapter pagerAdapter = null;
+
     private static final String LATITUDE_KEY = "latitude";
     private static final String LONGITUDE_KEY = "longitude";
     private static final String VALUE_KEY = "value";
@@ -67,7 +71,7 @@ public class ResultActivity extends AppCompatActivity {
     private Button map, saveValue;
 
     TextView pHLabel;
-    ViewPager suggestionPlant;
+    private ViewPager suggestionPlant = null;
 
     Handler bluetoothIn;
 
@@ -153,47 +157,80 @@ public class ResultActivity extends AppCompatActivity {
         checkBTState();
 
         String pHValue = pHLabel.getText().toString();
-        float pH = Float.parseFloat(pHValue);
+        float pH = 5.5f;
+
+        pagerAdapter = new MyPageAdapter();
+        suggestionPlant = (ViewPager) findViewById(R.id.suggestionPlant);
+        suggestionPlant.setAdapter(pagerAdapter);
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        RelativeLayout baseLayout = (RelativeLayout) inflater.inflate(R.layout.plant_default, null);
+        pagerAdapter.addView(baseLayout, 0);
+        pagerAdapter.notifyDataSetChanged();
 
         if(pH == 7.0){
-            layouts = new int[]{
-                    R.layout.plant_cabbage,
-                    R.layout.plant_banana,
-                    R.layout.plant_broccoli
-            };
+            removeView(baseLayout);
+            RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_cabbage, null);
+            RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_banana, null);
+            RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_broccoli, null);
+            addView(firstLayout);
+            addView(secondLayout);
+            addView(thirdLayout);
+            pagerAdapter.notifyDataSetChanged();
         } else if(pH == 6.5){
-            layouts = new int[]{
-                    R.layout.plant_carrot,
-                    R.layout.plant_melon,
-                    R.layout.plant_mint
-            };
+            removeView(baseLayout);
+            RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_carrot, null);
+            RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_melon, null);
+            RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_mint, null);
+            addView(firstLayout);
+            addView(secondLayout);
+            addView(thirdLayout);
+            pagerAdapter.notifyDataSetChanged();
         } else if(pH == 6.0){
-            layouts = new int[]{
-                    R.layout.plant_garlic,
-                    R.layout.plant_pakcoy,
-                    R.layout.plant_papaya
-            };
+            removeView(baseLayout);
+            RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_garlic, null);
+            RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_pakcoy, null);
+            RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_papaya, null);
+            addView(firstLayout);
+            addView(secondLayout);
+            addView(thirdLayout);
+            pagerAdapter.notifyDataSetChanged();
         } else if(pH == 5.5){
-            layouts = new int[]{
-                    R.layout.plant_onion,
-                    R.layout.plant_pineapple,
-                    R.layout.plant_potato
-            };
+            removeView(baseLayout);
+            RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_onion, null);
+            RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_pineapple, null);
+            RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_potato, null);
+            addView(thirdLayout);
+            addView(secondLayout);
+            addView(firstLayout);
+            pagerAdapter.notifyDataSetChanged();
         } else if(pH == 5.0){
-            layouts = new int[]{
-                    R.layout.plant_watermelon,
-                    R.layout.plant_spinach,
-                    R.layout.plant_radish,
-                    R.layout.plant_strawberry
-            };
-        } else {
-            layouts = new int[]{ R.layout.plant_default };
+            removeView(baseLayout);
+            RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_watermelon, null);
+            RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_spinach, null);
+            RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_radish, null);
+            RelativeLayout fourthLayout = (RelativeLayout) inflater.inflate(R.layout.plant_strawberry, null);
+            addView(firstLayout);
+            addView(secondLayout);
+            addView(thirdLayout);
+            addView(fourthLayout);
+            pagerAdapter.notifyDataSetChanged();
         }
 
-        myViewPagerAdapter = new MyViewPagerAdapter();
-        suggestionPlant.setAdapter(myViewPagerAdapter);
-        suggestionPlant.addOnPageChangeListener(viewPagerPageChangeListener);
+    }
 
+    public void addView (View newPage)
+    {
+        int pageIndex = pagerAdapter.addView (newPage);
+        suggestionPlant.setCurrentItem (pageIndex, true);
+    }
+
+    public void removeView (View defunctPage)
+    {
+        int pageIndex = pagerAdapter.removeView (suggestionPlant, defunctPage);
+        if (pageIndex == pagerAdapter.getCount())
+            pageIndex--;
+        suggestionPlant.setCurrentItem (pageIndex);
     }
 
     private void getLatLng() {

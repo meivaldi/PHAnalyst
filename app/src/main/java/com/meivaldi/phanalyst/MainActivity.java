@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
                 connectBlueTooth();
                 Toast.makeText(getApplicationContext(), "Connected", Toast.LENGTH_LONG).show();
                 String address = bluetoothDevice.getAddress();
+
+                Log.d("Debug", address);
 
                 if(!address.isEmpty()){
                     Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
