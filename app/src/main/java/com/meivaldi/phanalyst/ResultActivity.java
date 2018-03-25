@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Build;
@@ -48,6 +50,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -56,6 +60,7 @@ public class ResultActivity extends AppCompatActivity {
     private static final String LATITUDE_KEY = "latitude";
     private static final String LONGITUDE_KEY = "longitude";
     private static final String VALUE_KEY = "value";
+    private static final String ADDRESS_KEY = "address";
     private int[] layouts;
     private MyViewPagerAdapter myViewPagerAdapter;
     private Button map, saveValue;
@@ -87,6 +92,9 @@ public class ResultActivity extends AppCompatActivity {
     private double value;
 
     private FirebaseFirestore mFireStore = FirebaseFirestore.getInstance();
+
+    private Geocoder geoCoder;
+    private List<Address> addresses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,12 +218,23 @@ public class ResultActivity extends AppCompatActivity {
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
 
+                            geoCoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+
+                            try {
+                                addresses = geoCoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            String myAddress = addresses.get(0).getAddressLine(0);
+
                             Map<String, Object> dataToSave = new HashMap<String, Object>();
+                            dataToSave.put(ADDRESS_KEY, myAddress);
                             dataToSave.put(LATITUDE_KEY, currentLocation.getLatitude());
                             dataToSave.put(LONGITUDE_KEY, currentLocation.getLongitude());
                             dataToSave.put(VALUE_KEY, pHLabel.getText().toString());
 
-                            mFireStore.collection("PHAnalyst").document("My Location").set(dataToSave)
+                            mFireStore.collection("PHAnalyst").document(myAddress).set(dataToSave)
                                     .addOnCompleteListener(ResultActivity.this, new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
@@ -226,8 +245,6 @@ public class ResultActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
-                            Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + " " + currentLocation.getLongitude(), Toast.LENGTH_LONG).show();
-                            
                         } else {
                             Log.d(TAG, "onComplete: current location is null!");
                             Toast.makeText(ResultActivity.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
