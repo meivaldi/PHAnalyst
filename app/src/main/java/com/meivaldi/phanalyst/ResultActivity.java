@@ -148,6 +148,8 @@ public class ResultActivity extends AppCompatActivity {
         String pHValue = pHLabel.getText().toString();
         float pH = Float.parseFloat(pHValue);
 
+        Toast.makeText(getApplicationContext(), "" + pH, Toast.LENGTH_LONG).show();
+
         if(pH == 7.0){
             layouts = new int[]{
                     R.layout.plant_cabbage,

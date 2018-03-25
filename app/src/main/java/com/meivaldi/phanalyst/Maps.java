@@ -4,6 +4,8 @@ import android.*;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -22,8 +24,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class Maps extends AppCompatActivity implements OnMapReadyCallback{
 
@@ -36,6 +49,12 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
     private Boolean mLocationPermissionGranted = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+
+    private Geocoder geoCoder;
+    private List<Address> addresses;
+
+    private FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+    private ArrayList<PlaceInfo> arrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +79,17 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
 
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15f);
+                            /*geoCoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+
+                            try {
+                                addresses = geoCoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            String myAddress = addresses.get(0).getAddressLine(0);*/
+
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 25f);
                         } else {
                             Log.d(TAG, "onComplete: current location is null!");
                             Toast.makeText(Maps.this, "Unable to get current location", Toast.LENGTH_SHORT).show();
@@ -142,7 +171,38 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
                 return;
             }
             mMap.setMyLocationEnabled(true);
-
         }
+    }
+
+    private void getAllData(){
+        mFirestore.collection("PHAnalyst").get()
+                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot documentSnapshots) {
+                        if(documentSnapshots.isEmpty()){
+                            Toast.makeText(getApplicationContext(), "Data kosong", Toast.LENGTH_LONG).show();
+                        } else {
+                            List<PlaceInfo> places = documentSnapshots.toObjects(PlaceInfo.class);
+
+                            arrayList.addAll(places);
+
+
+                            for(int i=0; i<arrayList.size(); i++){
+                                MarkerOptions options = new MarkerOptions()
+                                        .position(places.get(i).getLatlng())
+                                        .title(places.get(i).getAddress());
+
+                                mMap.addMarker(options);
+                            }
+
+                            Toast.makeText(getApplicationContext(), ""+places.size(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Gagal mendapatkan data!", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

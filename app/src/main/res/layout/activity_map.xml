@@ -11,6 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Maps"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        tools:layout="@layout/activity_map" />
+
+        <ImageView
+            android:id="@+id/info"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_info"/>
 
 </RelativeLayout>
