@@ -251,7 +251,7 @@ public class ResultActivity extends AppCompatActivity {
         for(RelativeLayout layout: previousLayout){
             removeView(layout);
         }
-    }g
+    }
 
     public void addView (View newPage)
     {
