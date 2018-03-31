@@ -1,25 +1,19 @@
 package com.meivaldi.phanalyst;
 
-import android.*;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,25 +23,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,13 +53,13 @@ public class ResultActivity extends AppCompatActivity {
     private static final String VALUE_KEY = "value";
     private static final String ADDRESS_KEY = "address";
     private int[] layouts;
-    private MyViewPagerAdapter myViewPagerAdapter;
+    //private MyViewPagerAdapter myViewPagerAdapter;
     private Button map, saveValue;
 
-    TextView pHLabel;
+    private TextView pHLabel;
     private ViewPager suggestionPlant = null;
 
-    Handler bluetoothIn;
+    private Handler bluetoothIn;
 
     final int handlerState = 0;
     private BluetoothAdapter btAdapter = null;
@@ -105,8 +90,8 @@ public class ResultActivity extends AppCompatActivity {
 
     //private static float pH;
 
-    RelativeLayout baseLayout;
-    LayoutInflater inflater;
+    private RelativeLayout baseLayout;
+    private LayoutInflater inflater;
 
     private List<RelativeLayout> previousLayout = new ArrayList<>();
 
@@ -187,9 +172,9 @@ public class ResultActivity extends AppCompatActivity {
             previousLayout.add(firstLayout);
             previousLayout.add(secondLayout);
             previousLayout.add(thirdLayout);
-            addView(firstLayout);
-            addView(secondLayout);
-            addView(thirdLayout);
+            pagerAdapter.addView(firstLayout, 0);
+            pagerAdapter.addView(secondLayout, 1);
+            pagerAdapter.addView(thirdLayout, 2);
             pagerAdapter.notifyDataSetChanged();
         } else if(pH >= 5.5 && pH < 6.0){
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_carrot, null);
@@ -198,9 +183,9 @@ public class ResultActivity extends AppCompatActivity {
             previousLayout.add(firstLayout);
             previousLayout.add(secondLayout);
             previousLayout.add(thirdLayout);
-            addView(firstLayout);
-            addView(secondLayout);
-            addView(thirdLayout);
+            pagerAdapter.addView(firstLayout, 0);
+            pagerAdapter.addView(secondLayout, 1);
+            pagerAdapter.addView(thirdLayout, 2);
             pagerAdapter.notifyDataSetChanged();
         } else if(pH >= 5.0 && pH < 5.5){
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_garlic, null);
@@ -209,21 +194,20 @@ public class ResultActivity extends AppCompatActivity {
             previousLayout.add(firstLayout);
             previousLayout.add(secondLayout);
             previousLayout.add(thirdLayout);
-            addView(firstLayout);
-            addView(secondLayout);
-            addView(thirdLayout);
+            pagerAdapter.addView(firstLayout, 0);
+            pagerAdapter.addView(secondLayout, 1);
+            pagerAdapter.addView(thirdLayout, 2);
             pagerAdapter.notifyDataSetChanged();
         } else if(pH >= 4.5 && pH < 5.0){
-            removeView(baseLayout);
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_onion, null);
             RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_pineapple, null);
             RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_potato, null);
             previousLayout.add(firstLayout);
             previousLayout.add(secondLayout);
             previousLayout.add(thirdLayout);
-            addView(thirdLayout);
-            addView(secondLayout);
-            addView(firstLayout);
+            pagerAdapter.addView(firstLayout, 0);
+            pagerAdapter.addView(secondLayout, 1);
+            pagerAdapter.addView(thirdLayout, 2);
             pagerAdapter.notifyDataSetChanged();
         } else if(pH >= 4.0 && pH < 4.5){
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_watermelon, null);
@@ -233,27 +217,28 @@ public class ResultActivity extends AppCompatActivity {
             previousLayout.add(firstLayout);
             previousLayout.add(secondLayout);
             previousLayout.add(thirdLayout);
-            addView(firstLayout);
-            addView(secondLayout);
-            addView(thirdLayout);
-            addView(fourthLayout);
+            previousLayout.add(fourthLayout);
+            pagerAdapter.addView(firstLayout, 0);
+            pagerAdapter.addView(secondLayout, 1);
+            pagerAdapter.addView(thirdLayout, 2);
+            pagerAdapter.addView(fourthLayout, 3);
             pagerAdapter.notifyDataSetChanged();
         } else if(pH != 0.0){
             Toast.makeText(getApplicationContext(), "Nilai diluar jangkauan!", Toast.LENGTH_LONG).show();
             RelativeLayout defaultLayout = (RelativeLayout) inflater.inflate(R.layout.plant_default, null);
             previousLayout.add(defaultLayout);
-            addView(defaultLayout);
+            pagerAdapter.addView(defaultLayout, 0);
             pagerAdapter.notifyDataSetChanged();
         }
     }
 
     private void removeLayout() {
         for(RelativeLayout layout: previousLayout){
-            removeView(layout);
+            pagerAdapter.removeView(suggestionPlant, layout);
         }
     }
 
-    public void addView (View newPage)
+    /*public void addView (View newPage)
     {
         int pageIndex = pagerAdapter.addView (newPage);
         suggestionPlant.setCurrentItem (pageIndex, true);
@@ -265,7 +250,7 @@ public class ResultActivity extends AppCompatActivity {
         if (pageIndex == pagerAdapter.getCount())
             pageIndex--;
         suggestionPlant.setCurrentItem (pageIndex);
-    }
+    }*/
 
     private void getLatLng() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(ResultActivity.this);
@@ -344,7 +329,7 @@ public class ResultActivity extends AppCompatActivity {
         }
     }
 
-    public class MyViewPagerAdapter extends PagerAdapter {
+    /*public class MyViewPagerAdapter extends PagerAdapter {
         private LayoutInflater layoutInflater;
 
         public MyViewPagerAdapter() {
@@ -376,7 +361,7 @@ public class ResultActivity extends AppCompatActivity {
             View view = (View) object;
             container.removeView(view);
         }
-    }
+    }*/
 
     @Override
     protected void onResume() {
