@@ -52,6 +52,7 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -100,7 +101,14 @@ public class ResultActivity extends AppCompatActivity {
 
     private Geocoder geoCoder;
     private List<Address> addresses;
-    private ProgressDialog progressDialog;
+    private ProgressDialog progressDialog, dialog;
+
+    //private static float pH;
+
+    RelativeLayout baseLayout;
+    LayoutInflater inflater;
+
+    private List<RelativeLayout> previousLayout = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +121,12 @@ public class ResultActivity extends AppCompatActivity {
         pHLabel = (TextView) findViewById(R.id.pHValue);
         map = (Button) findViewById(R.id.seeMap);
         saveValue = (Button) findViewById(R.id.simpanNilai);
+
         progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Tunggu Sebentar");
+        progressDialog.setIcon(R.drawable.sensor);
+        progressDialog.setTitle("Sedang Memroses...");
+
 
         map.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,15 +138,11 @@ public class ResultActivity extends AppCompatActivity {
         saveValue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog.setMessage("Tunggu Sebentar");
-                progressDialog.setIcon(R.drawable.sensor);
-                progressDialog.setTitle("Sedang Memroses...");
                 progressDialog.show();
                 getLatLng();
             }
         });
 
-        final String[] result = new String[1];
         bluetoothIn = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 if (msg.what == handlerState) {
@@ -144,8 +153,10 @@ public class ResultActivity extends AppCompatActivity {
                     if (endOfLineIndex > 0) {
                         if (recDataString.charAt(0) == '#') {
                             String sensor = recDataString.substring(1, 5);
-                            result[0] = sensor;
                             pHLabel.setText(sensor);
+
+                            float ph = Float.parseFloat(pHLabel.getText().toString());
+                            checkLayout(ph);
                         }
                         recDataString.delete(0, recDataString.length());
                         }
@@ -156,68 +167,91 @@ public class ResultActivity extends AppCompatActivity {
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         checkBTState();
 
-        String pHValue = pHLabel.getText().toString();
-        float pH = 5.5f;
-
         pagerAdapter = new MyPageAdapter();
         suggestionPlant = (ViewPager) findViewById(R.id.suggestionPlant);
         suggestionPlant.setAdapter(pagerAdapter);
 
-        LayoutInflater inflater = this.getLayoutInflater();
-        RelativeLayout baseLayout = (RelativeLayout) inflater.inflate(R.layout.plant_default, null);
+        inflater = this.getLayoutInflater();
+        baseLayout = (RelativeLayout) inflater.inflate(R.layout.plant_default, null);
+        previousLayout.add(baseLayout);
         pagerAdapter.addView(baseLayout, 0);
         pagerAdapter.notifyDataSetChanged();
+    }
 
-        if(pH == 7.0){
-            removeView(baseLayout);
+    private void checkLayout(float pH) {
+        removeLayout();
+        if(pH == 6.0){
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_cabbage, null);
             RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_banana, null);
             RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_broccoli, null);
+            previousLayout.add(firstLayout);
+            previousLayout.add(secondLayout);
+            previousLayout.add(thirdLayout);
             addView(firstLayout);
             addView(secondLayout);
             addView(thirdLayout);
             pagerAdapter.notifyDataSetChanged();
-        } else if(pH == 6.5){
-            removeView(baseLayout);
+        } else if(pH >= 5.5 && pH < 6.0){
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_carrot, null);
             RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_melon, null);
             RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_mint, null);
+            previousLayout.add(firstLayout);
+            previousLayout.add(secondLayout);
+            previousLayout.add(thirdLayout);
             addView(firstLayout);
             addView(secondLayout);
             addView(thirdLayout);
             pagerAdapter.notifyDataSetChanged();
-        } else if(pH == 6.0){
-            removeView(baseLayout);
+        } else if(pH >= 5.0 && pH < 5.5){
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_garlic, null);
             RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_pakcoy, null);
             RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_papaya, null);
+            previousLayout.add(firstLayout);
+            previousLayout.add(secondLayout);
+            previousLayout.add(thirdLayout);
             addView(firstLayout);
             addView(secondLayout);
             addView(thirdLayout);
             pagerAdapter.notifyDataSetChanged();
-        } else if(pH == 5.5){
+        } else if(pH >= 4.5 && pH < 5.0){
             removeView(baseLayout);
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_onion, null);
             RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_pineapple, null);
             RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_potato, null);
+            previousLayout.add(firstLayout);
+            previousLayout.add(secondLayout);
+            previousLayout.add(thirdLayout);
             addView(thirdLayout);
             addView(secondLayout);
             addView(firstLayout);
             pagerAdapter.notifyDataSetChanged();
-        } else if(pH == 5.0){
-            removeView(baseLayout);
+        } else if(pH >= 4.0 && pH < 4.5){
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_watermelon, null);
             RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_spinach, null);
             RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_radish, null);
             RelativeLayout fourthLayout = (RelativeLayout) inflater.inflate(R.layout.plant_strawberry, null);
+            previousLayout.add(firstLayout);
+            previousLayout.add(secondLayout);
+            previousLayout.add(thirdLayout);
             addView(firstLayout);
             addView(secondLayout);
             addView(thirdLayout);
             addView(fourthLayout);
             pagerAdapter.notifyDataSetChanged();
+        } else if(pH != 0.0){
+            Toast.makeText(getApplicationContext(), "Nilai diluar jangkauan!", Toast.LENGTH_LONG).show();
+            RelativeLayout defaultLayout = (RelativeLayout) inflater.inflate(R.layout.plant_default, null);
+            previousLayout.add(defaultLayout);
+            addView(defaultLayout);
+            pagerAdapter.notifyDataSetChanged();
         }
-
     }
+
+    private void removeLayout() {
+        for(RelativeLayout layout: previousLayout){
+            removeView(layout);
+        }
+    }g
 
     public void addView (View newPage)
     {
@@ -309,24 +343,6 @@ public class ResultActivity extends AppCompatActivity {
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
-
-    ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
-
-        @Override
-        public void onPageSelected(int position) {
-
-        }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
-
-        }
-    };
 
     public class MyViewPagerAdapter extends PagerAdapter {
         private LayoutInflater layoutInflater;
@@ -455,6 +471,7 @@ public class ResultActivity extends AppCompatActivity {
         } catch (IOException e2) {
 
         }
+        finish();
     }
 
     @Override

@@ -54,7 +54,7 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
     private List<Address> addresses;
 
     private FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-    private ArrayList<PlaceInfo> arrayList;
+    public static ArrayList<PlaceInfo> arrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +62,6 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
         setContentView(R.layout.activity_map);
 
         getLocationPermission();
-
-        arrayList = new ArrayList<>();
     }
 
     private void getDeviceLocation() {
@@ -175,28 +173,28 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
             mMap.setMyLocationEnabled(true);
 
             getAllData();
-            Toast.makeText(getApplicationContext(), ""+arrayList.size(), Toast.LENGTH_LONG).show();
         }
     }
 
     private void getAllData(){
         mFirestore.collection("PHAnalyst").get()
-                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot documentSnapshots) {
                         if(documentSnapshots.isEmpty()){
                             Toast.makeText(getApplicationContext(), "Data kosong", Toast.LENGTH_LONG).show();
                         } else {
-                            List<PlaceInfo> places = documentSnapshots.toObjects(PlaceInfo.class);
+                            arrayList = (ArrayList<PlaceInfo>) documentSnapshots.toObjects(PlaceInfo.class);
+                            PlaceInfo place = arrayList.get(0);
 
-                            Maps.this.arrayList.addAll(places);
+                            Toast.makeText(getApplicationContext(), "Place: " + place.getAddress(), Toast.LENGTH_LONG).show();
                         }
                     }
                 }).addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Gagal mendapatkan data!", Toast.LENGTH_LONG).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(), "Gagal mendapatkan data!", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }
