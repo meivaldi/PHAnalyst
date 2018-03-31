@@ -17,6 +17,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -139,15 +141,21 @@ public class ResultActivity extends AppCompatActivity {
                         if (recDataString.charAt(0) == '#') {
                             String sensor = recDataString.substring(1, 5);
                             pHLabel.setText(sensor);
-
-                            float ph = Float.parseFloat(pHLabel.getText().toString());
-                            checkLayout(ph);
                         }
                         recDataString.delete(0, recDataString.length());
                         }
                     }
                 }
         };
+
+        pHLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = pHLabel.getText().toString();
+                float ph = Float.parseFloat(text);
+                checkLayout(ph);
+            }
+        });
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         checkBTState();
@@ -166,6 +174,7 @@ public class ResultActivity extends AppCompatActivity {
     private void checkLayout(float pH) {
         removeLayout();
         if(pH == 6.0){
+            previousLayout.clear();
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_cabbage, null);
             RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_banana, null);
             RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_broccoli, null);
@@ -177,6 +186,7 @@ public class ResultActivity extends AppCompatActivity {
             pagerAdapter.addView(thirdLayout, 2);
             pagerAdapter.notifyDataSetChanged();
         } else if(pH >= 5.5 && pH < 6.0){
+            previousLayout.clear();
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_carrot, null);
             RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_melon, null);
             RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_mint, null);
@@ -188,6 +198,7 @@ public class ResultActivity extends AppCompatActivity {
             pagerAdapter.addView(thirdLayout, 2);
             pagerAdapter.notifyDataSetChanged();
         } else if(pH >= 5.0 && pH < 5.5){
+            previousLayout.clear();
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_garlic, null);
             RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_pakcoy, null);
             RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_papaya, null);
@@ -199,6 +210,7 @@ public class ResultActivity extends AppCompatActivity {
             pagerAdapter.addView(thirdLayout, 2);
             pagerAdapter.notifyDataSetChanged();
         } else if(pH >= 4.5 && pH < 5.0){
+            previousLayout.clear();
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_onion, null);
             RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_pineapple, null);
             RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_potato, null);
@@ -210,6 +222,7 @@ public class ResultActivity extends AppCompatActivity {
             pagerAdapter.addView(thirdLayout, 2);
             pagerAdapter.notifyDataSetChanged();
         } else if(pH >= 4.0 && pH < 4.5){
+            previousLayout.clear();
             RelativeLayout firstLayout = (RelativeLayout) inflater.inflate(R.layout.plant_watermelon, null);
             RelativeLayout secondLayout = (RelativeLayout) inflater.inflate(R.layout.plant_spinach, null);
             RelativeLayout thirdLayout = (RelativeLayout) inflater.inflate(R.layout.plant_radish, null);
@@ -224,10 +237,11 @@ public class ResultActivity extends AppCompatActivity {
             pagerAdapter.addView(fourthLayout, 3);
             pagerAdapter.notifyDataSetChanged();
         } else if(pH != 0.0){
-            Toast.makeText(getApplicationContext(), "Nilai diluar jangkauan!", Toast.LENGTH_LONG).show();
+            previousLayout.clear();
+            Toast.makeText(getApplicationContext(), "Nilai pH diluar jangkauan!", Toast.LENGTH_LONG).show();
             RelativeLayout defaultLayout = (RelativeLayout) inflater.inflate(R.layout.plant_default, null);
-            previousLayout.add(defaultLayout);
             pagerAdapter.addView(defaultLayout, 0);
+            previousLayout.add(defaultLayout);
             pagerAdapter.notifyDataSetChanged();
         }
     }
@@ -235,6 +249,7 @@ public class ResultActivity extends AppCompatActivity {
     private void removeLayout() {
         for(RelativeLayout layout: previousLayout){
             pagerAdapter.removeView(suggestionPlant, layout);
+            pagerAdapter.notifyDataSetChanged();
         }
     }
 
