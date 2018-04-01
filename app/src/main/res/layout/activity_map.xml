@@ -14,12 +14,4 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         tools:layout="@layout/activity_map" />
 
-        <ImageView
-            android:id="@+id/info"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/ic_info"/>
-
 </RelativeLayout>

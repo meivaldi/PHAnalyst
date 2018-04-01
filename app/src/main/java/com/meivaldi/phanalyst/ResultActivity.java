@@ -52,7 +52,7 @@ public class ResultActivity extends AppCompatActivity {
 
     private static final String LATITUDE_KEY = "latitude";
     private static final String LONGITUDE_KEY = "longitude";
-    private static final String VALUE_KEY = "value";
+    private static final String VALUE_KEY = "phValue";
     private static final String ADDRESS_KEY = "address";
     private int[] layouts;
     //private MyViewPagerAdapter myViewPagerAdapter;

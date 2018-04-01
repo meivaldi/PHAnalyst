@@ -14,31 +14,21 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class PlaceInfo {
 
-    private String name;
     private String address;
-    private String id;
-    private LatLng latlng;
-    private double phValue;
+    private double latitude;
+    private double longitude;
+    private String phValue;
 
-    public PlaceInfo(String name, String address, String id, LatLng latlng,
-                     double value) {
-        this.name = name;
+    public PlaceInfo(String address, double latitude,
+                     double longitude, String value) {
         this.address = address;
-        this.id = id;
-        this.latlng = latlng;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.phValue = value;
     }
 
     public PlaceInfo() {
 
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAddress() {
@@ -49,30 +39,35 @@ public class PlaceInfo {
         this.address = address;
     }
 
-    public String getId() {
-        return id;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public LatLng getLatlng() {
-        return latlng;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLatlng(LatLng latlng) {
-        this.latlng = latlng;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getPhValue() {
+        return phValue;
+    }
+
+    public void setPhValue(String phValue) {
+        this.phValue = phValue;
     }
 
     @Override
     public String toString() {
-        return "PlaceInfo{" +
-                "name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", id='" + id + '\'' +
-                ", latlng=" + latlng +
-                ", phValue=" + phValue +'\'' +
-                '}';
+        return "address='" + address + '\'' +
+                ", latitude=" + latitude +'\'' +
+                ", longitude=" + longitude +'\'' +
+                ", phValue=" + phValue +'\'' ;
     }
 }

@@ -29,6 +29,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -54,7 +57,8 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
     private List<Address> addresses;
 
     private FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-    public static ArrayList<PlaceInfo> arrayList;
+    private CollectionReference mCollectionReference = mFirestore.collection("PHAnalyst");
+    public static ArrayList<PlaceInfo> arrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,11 +177,60 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
             mMap.setMyLocationEnabled(true);
 
             getAllData();
+            //addAllMarker();
         }
     }
 
+    private void addAllMarker() {
+        for(PlaceInfo place: arrayList){
+            MarkerOptions marker = new MarkerOptions()
+                    .position(new LatLng(place.getLatitude(), place.getLongitude()))
+                    .title(place.getAddress())
+                    .snippet("PH Tanah: " + place.getPhValue());
+
+            mMap.addMarker(marker);
+        }
+
+        Log.d(TAG, "addAllMarker: Success!");
+    }
+
     private void getAllData(){
-        mFirestore.collection("PHAnalyst").get()
+        mCollectionReference.get()
+                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot documentSnapshots) {
+                        Log.d(TAG, "onSuccess: Success to retrieve data");
+
+                        if(documentSnapshots.isEmpty()){
+                            Log.d(TAG, "onSuccess: List is Empty");
+                        } else {
+                            List<PlaceInfo> places = documentSnapshots.toObjects(PlaceInfo.class);
+                            arrayList.addAll(places);
+
+                            Log.d(TAG, "onSuccess: " + arrayList);
+                            addAllMarker();
+                        }
+                    }
+                }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Failure to get data");
+            }
+        });
+        /*mCollectionReference.get()
+                .addOnCompleteListener(this, new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                            PlaceInfo placeInfo = documentSnapshot.toObject(PlaceInfo.class);
+
+                            Toast.makeText(getApplicationContext(), placeInfo.getAddress(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+*/
+        /*mFirestore.collection("PHAnalyst").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot documentSnapshots) {
@@ -195,6 +248,6 @@ public class Maps extends AppCompatActivity implements OnMapReadyCallback{
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getApplicationContext(), "Gagal mendapatkan data!", Toast.LENGTH_LONG).show();
                     }
-                });
+                });*/
     }
 }
