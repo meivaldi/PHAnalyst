@@ -3,5 +3,15 @@ A Final submission to get my bachelor degree. This project is about to check a p
 
 Here is the example:
 
+![alt text](http://millennial.co.id/images/Screenshot_1554193462.png)
 
+![alt text](http://millennial.co.id/images/Screenshot_1554193442.png)
+
+![alt text](http://millennial.co.id/images/Screenshot_1554193445.png)
+
+![alt text](http://millennial.co.id/images/Screenshot_1554194082.png)
+
+![alt text](http://millennial.co.id/images/Screenshot_1554194097.png)
+
+![alt text](http://millennial.co.id/images/Screenshot_1554194100.png)
 
